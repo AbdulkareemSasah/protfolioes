@@ -67,7 +67,7 @@ function parseParamsWithoutBranch(params: string[]) {
   return null;
 }
 
-function RedirectToBranch(props: { config: Config }) {
+function RedirectToBranch(props: { config: Config; basePath: string }) {
   const { push } = useRouter();
   const { data, error } = useContext(GitHubAppShellDataContext)!;
   useEffect(() => {
@@ -80,7 +80,7 @@ function RedirectToBranch(props: { config: Config }) {
     }
     if (data?.repository?.defaultBranchRef) {
       push(
-        `/keystatic/branch/${encodeURIComponent(
+        `${props.basePath}/branch/${encodeURIComponent(
           data.repository.defaultBranchRef.name
         )}`
       );
@@ -98,11 +98,17 @@ function RedirectToBranch(props: { config: Config }) {
   return null;
 }
 
-function PageInner({ config }: { config: Config }) {
+function PageInner({ config, basePath: _basePath }: { config: Config; basePath?: string }) {
   const { params } = useRouter();
   let branch = null,
     parsedParams,
-    basePath: string;
+    basePath = _basePath || '/keystatic';
+  
+  // Note: we're shadowing the basePath variable here to use the one from props if available
+  // But wait, the router already handles the basePath?
+  // The router handles routing based on URL.
+  // PageInner uses `basePath` to pass to children.
+  
   if (params.join('/') === 'cloud/oauth/callback') {
     return <KeystaticCloudAuthCallback config={config} />;
   }
@@ -118,7 +124,7 @@ function PageInner({ config }: { config: Config }) {
   if (isGitHubConfig(config) || isCloudConfig(config)) {
     const origWrapper = wrapper;
     wrapper = element => (
-      <AuthWrapper config={config}>
+      <AuthWrapper config={config} basePath={basePath}>
         <GitHubAppShellDataProvider config={config}>
           {origWrapper(element)}
         </GitHubAppShellDataProvider>
@@ -131,7 +137,7 @@ function PageInner({ config }: { config: Config }) {
         parsedParams = {};
         branch = null; // Will be set to default branch later if not present
       } else {
-        return wrapper(<RedirectToBranch config={config} />);
+        return wrapper(<RedirectToBranch config={config} basePath={basePath} />);
       }
     } else if (params.length === 1 && isGitHubConfig(config)) {
       if (params[0] === 'setup') return <KeystaticSetup config={config} />;
@@ -148,48 +154,15 @@ function PageInner({ config }: { config: Config }) {
     const parsedParamsWithoutBranch = parseParamsWithoutBranch(params);
     if (parsedParamsWithoutBranch) {
        parsedParams = parsedParamsWithoutBranch;
-       basePath = '/keystatic';
+       // basePath stays as passed
     } else if (params[0] === 'branch' && params.length >= 2) {
       branch = params[1];
-      basePath = `/keystatic/branch/${encodeURIComponent(branch)}`;
+      basePath = `${basePath}/branch/${encodeURIComponent(branch)}`;
       parsedParams = parseParamsWithoutBranch(params.slice(2));
     }
-    
-    // If we have parsedParams (from implicit branch) but no branch variable, we need to get the default branch.
-    // However, we are inside a function that doesn't have the context yet if it wasn't rendered.
-    // BUT PageInner IS rendered inside the provider.
-    // So we can use a component to extract the default branch?
-    // OR we change how we pass currentBranch to AppShell.
-    
-    // Let's look at `PageInner` structure again.
-    // It wraps content in `GitHubAppShellDataProvider`.
-    // But `PageInner` logic runs *before* that provider provides data to its children? 
-    // No, `PageInner` is a component. `wrapper` is applied at the return statement.
-    // `wrapper` wraps the result of `PageInner`? No.
-    // `wrapper` is defined as `wrapper = element => ...`.
-    // `return wrapper(<AppShell ... />)`.
-    // So `AppShell` is a child of `GitHubAppShellDataProvider`. `PageInner` itself is NOT a child of that provider in this render cycle (it creates it).
-    // So `PageInner` cannot read the context to get the default branch.
-    
-    // However, `GitHubAppShellProvider` (used inside `AppShell`) takes `currentBranch`.
-    // If `currentBranch` is empty, what happens?
-    // `GitHubAppShellProvider` logic:
-    // const currentBranchRef = repo?.refs?.nodes?.find(x => x?.name === props.currentBranch);
-    // If props.currentBranch is empty string, it won't find it (unless a branch is named "").
-    
-    // We need to pass the default branch name to `AppShell`. 
-    // BUT we don't know it yet.
-    
-    // If we want implicit default branch, we might need `AppShell` or `GitHubAppShellProvider` to handle "use default if current is empty".
-    
-    // Let's modify `ui.tsx` to use a purely component-based approach where we don't need to know the branch name upfront if we want the default.
-    // OR we modify `GitHubAppShellProvider` to default to `defaultBranchRef` if `currentBranch` is falsy.
-    
-    // This seems safer and cleaner.
-    
   } else {
     parsedParams = parseParamsWithoutBranch(params);
-    basePath = '/keystatic';
+    // basePath stays as passed
   }
   return wrapper(
     <AppShell config={config} currentBranch={branch || ''} basePath={basePath}>
@@ -256,6 +229,7 @@ function AlwaysNotFound(): never {
 function AuthWrapper(props: {
   config: GitHubConfig | CloudConfig;
   children: ReactElement;
+  basePath: string;
 }) {
   const [state, setState] = useState<'unknown' | 'valid' | 'explicit-auth'>(
     'unknown'
@@ -340,6 +314,7 @@ function RedirectToLoopback(props: { children: ReactNode }) {
 export function Keystatic(props: {
   config: Config;
   appSlug?: { envName: string; value: string | undefined };
+  basePath?: string;
 }) {
   if (props.config.storage.kind === 'github') {
     assertValidRepoConfig(props.config.storage.repo);
@@ -349,9 +324,9 @@ export function Keystatic(props: {
     <ClientOnly>
       <RedirectToLoopback>
         <AppSlugProvider value={props.appSlug}>
-          <RouterProvider>
+          <RouterProvider basePath={props.basePath}>
             <Provider config={props.config}>
-              <PageInner config={props.config} />
+              <PageInner config={props.config} basePath={props.basePath} />
             </Provider>
           </RouterProvider>
         </AppSlugProvider>

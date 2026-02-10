@@ -499,7 +499,7 @@ export default config({
     locale: "ar-AE",
     storage: {
         kind: 'github',
-        repo: 'AbdulkareemSasah/arch-portfolio-monorepo',
+        repo: 'AbdulkareemSasah/protfolio',
         credentials: {
             kind: 'custom',
         }

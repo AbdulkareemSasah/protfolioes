@@ -14,18 +14,19 @@ export type Router = {
   params: string[];
   pathname: string;
   search: string;
+  basePath: string;
 };
 
 const RouterContext = createContext<Router | null>(null);
 
-export function RouterProvider(props: { children: ReactNode }) {
+export function RouterProvider(props: { children: ReactNode; basePath?: string }) {
   const [url, setUrl] = useState(() => window.location.href);
 
   function navigate(url: string, replace: boolean) {
     const newUrl = new URL(url, window.location.href);
     if (
       newUrl.origin !== window.location.origin ||
-      !newUrl.pathname.startsWith('/keystatic')
+      !newUrl.pathname.startsWith(router.basePath)
     ) {
       window.location.assign(newUrl);
       return;
@@ -42,7 +43,7 @@ export function RouterProvider(props: { children: ReactNode }) {
     navigate(path, false);
   }
   const parsedUrl = new URL(url);
-  const replaced = parsedUrl.pathname.replace(/^\/keystatic\/?/, '');
+  const replaced = parsedUrl.pathname.replace(new RegExp(`^${router.basePath}/?`), '');
   const params =
     replaced === '' ? [] : replaced.split('/').map(decodeURIComponent);
   const router = {
@@ -52,6 +53,7 @@ export function RouterProvider(props: { children: ReactNode }) {
     replace,
     push,
     params,
+    basePath: props.basePath || '/keystatic',
   };
   useEffect(() => {
     const handleNavigate = () => {
