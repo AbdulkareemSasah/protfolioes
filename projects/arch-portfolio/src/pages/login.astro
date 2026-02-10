@@ -1,0 +1,109 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+// Check if already logged in
+if (Astro.cookies.has("auth_token")) {
+    return Astro.redirect("/");
+}
+
+let error = "";
+
+if (Astro.request.method === "POST") {
+    try {
+        const data = await Astro.request.formData();
+        const email = data.get("email");
+        const password = data.get("password");
+
+        // Get credentials from environment variables
+        const validEmail = import.meta.env.AUTH_EMAIL;
+        const validPassword = import.meta.env.AUTH_PASSWORD;
+
+        if (!validEmail || !validPassword) {
+            error = "Server configuration error: Missing AUTH credentials.";
+        } else if (email === validEmail && password === validPassword) {
+            // Set cookie that expires in 7 days
+            Astro.cookies.set("auth_token", "true", {
+                path: "/",
+                httpOnly: true,
+                secure: import.meta.env.PROD,
+                maxAge: 60 * 60 * 24 * 7, // 7 days
+            });
+            return Astro.redirect("/keystatic");
+        } else {
+            error = "البريد الإلكتروني أو كلمة المرور غير صحيحة";
+        }
+    } catch (e) {
+        error = "حدث خطأ غير متوقع";
+    }
+}
+---
+
+<Layout title="تأكيد الدخول - Arch Portfolio">
+    <div class="min-h-screen flex items-center justify-center bg-gray-900 px-4">
+        <div
+            class="max-w-md w-full bg-gray-800 rounded-2xl shadow-xl overflow-hidden border border-gray-700"
+        >
+            <div class="p-8">
+                <div class="text-center mb-8">
+                    <h1 class="text-2xl font-bold text-white mb-2">
+                        تسجيل الدخول
+                    </h1>
+                    <p class="text-gray-400">
+                        يرجى إدخال بيانات الاعتماد للمتابعة
+                    </p>
+                </div>
+
+                {
+                    error && (
+                        <div class="bg-red-500/10 border border-red-500/50 text-red-200 px-4 py-3 rounded-lg mb-6 text-sm text-center">
+                            {error}
+                        </div>
+                    )
+                }
+
+                <form method="POST" class="space-y-6">
+                    <div>
+                        <label
+                            for="email"
+                            class="block text-sm font-medium text-gray-300 mb-2"
+                        >
+                            البريد الإلكتروني
+                        </label>
+                        <input
+                            type="email"
+                            id="email"
+                            name="email"
+                            required
+                            class="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
+                            placeholder="name@example.com"
+                        />
+                    </div>
+
+                    <div>
+                        <label
+                            for="password"
+                            class="block text-sm font-medium text-gray-300 mb-2"
+                        >
+                            كلمة المرور
+                        </label>
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            required
+                            class="w-full px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-colors"
+                            placeholder="••••••••"
+                        />
+                    </div>
+
+                    <button
+                        type="submit"
+                        class="w-full bg-white text-gray-900 font-bold py-3 px-4 rounded-lg hover:bg-gray-200 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white"
+                    >
+                        دخول
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</Layout>

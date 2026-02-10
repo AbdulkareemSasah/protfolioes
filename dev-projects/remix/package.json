@@ -1,0 +1,33 @@
+{
+  "name": "@keystatic/remix-test-app",
+  "version": "0.1.46",
+  "type": "module",
+  "private": true,
+  "sideEffects": false,
+  "scripts": {
+    "build": "remix build",
+    "dev": "remix dev --manual",
+    "start": "remix-serve ./build/index.js",
+    "typecheck": "tsc"
+  },
+  "dependencies": {
+    "@keystatic/core": "workspace:^",
+    "@keystatic/remix": "workspace:^",
+    "@remix-run/node": "^2.9.2",
+    "@remix-run/react": "^2.9.2",
+    "@remix-run/serve": "^2.9.2",
+    "isbot": "^3.6.8",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@remix-run/dev": "^2.9.2",
+    "@types/react": "^19.0.8",
+    "@types/react-dom": "^19.0.3",
+    "eslint": "^8.18.0",
+    "typescript": "^5.5.3"
+  },
+  "engines": {
+    "node": ">=14"
+  }
+}

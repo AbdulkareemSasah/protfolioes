@@ -1,0 +1,23 @@
+{
+    "readMore": "اقرأ المزيد",
+    "viewProject": "عرض المشروع",
+    "viewAll": "عرض الكل",
+    "submit": "إرسال",
+    "contactUs": "تواصل معنا",
+    "backToHome": "العودة للرئيسية",
+    "backToProjects": "العودة للمشاريع",
+    "backToServices": "العودة للخدمات",
+    "formNameLabel": "الاسم الكامل",
+    "formEmailLabel": "البريد الإلكتروني",
+    "formPhoneLabel": "رقم الهاتف",
+    "formMessageLabel": "الرسالة",
+    "formSuccessMessage": "شكراً لتواصلك معنا! سنرد عليك قريباً.",
+    "all": "الكل",
+    "loadMore": "تحميل المزيد",
+    "noResults": "لا توجد نتائج",
+    "projectInfo": "معلومات المشروع",
+    "client": "العميل",
+    "location": "الموقع",
+    "year": "السنة",
+    "area": "المساحة"
+}

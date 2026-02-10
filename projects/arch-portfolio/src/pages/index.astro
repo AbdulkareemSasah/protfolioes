@@ -1,0 +1,83 @@
+---
+// Homepage - redirects to the dynamic page route
+import { getEntry } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/layout/Header.astro";
+import Footer from "../components/layout/Footer.astro";
+import BlockRenderer from "../components/BlockRenderer.astro";
+export const prerender = true;
+
+// Get home page
+import { getCollection } from "astro:content";
+const pages = await getCollection("pages");
+const homePage = pages.find(
+	(page) =>
+		page.id === "home.yaml" ||
+		page.id === "home" ||
+		page.data.slug === "home" ||
+		page.data.slug === "/",
+);
+
+// Get settings
+const header = await getEntry("settings", "header");
+const footer = await getEntry("settings", "footer");
+const site = await getEntry("settings", "site");
+const labels = await getEntry("settings", "labels");
+
+const headerData = header?.data ?? {
+	navigation: [],
+	showCta: true,
+	ctaText: "تواصل معنا",
+	ctaLink: "/contact",
+	showThemeToggle: true,
+	logoPosition: "right",
+};
+
+const footerData = footer?.data ?? {
+	columns: [],
+	showSocial: true,
+	socialLinks: {},
+	copyrightText: "© {year} جميع الحقوق محفوظة",
+	showBackToTop: true,
+};
+
+const siteData = site?.data ?? {
+	siteName: "مكتب معماري",
+	logo: null,
+};
+
+const labelsData = labels?.data ?? {};
+
+const pageData = homePage?.data ?? {
+	title: "الرئيسية",
+	description: "مكتب معماري",
+	blocks: [],
+};
+---
+
+<Layout title={pageData.title} description={pageData.description ?? undefined}>
+	<Header
+		slot="header"
+		siteName={siteData.siteName}
+		logo={siteData.logo}
+		logoPosition={headerData.logoPosition}
+		navigation={headerData.navigation}
+		showCta={headerData.showCta}
+		ctaText={headerData.ctaText}
+		ctaLink={headerData.ctaLink}
+		showThemeToggle={headerData.showThemeToggle}
+	/>
+
+	<BlockRenderer blocks={pageData.blocks || []} labels={labelsData} />
+
+	<Footer
+		slot="footer"
+		siteName={siteData.siteName}
+		logo={siteData.logo}
+		columns={footerData.columns}
+		showSocial={footerData.showSocial}
+		socialLinks={footerData.socialLinks}
+		copyrightText={footerData.copyrightText}
+		showBackToTop={footerData.showBackToTop}
+	/>
+</Layout>

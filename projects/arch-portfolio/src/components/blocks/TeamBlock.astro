@@ -1,0 +1,291 @@
+---
+interface TeamMember {
+    name: string;
+    role: string;
+    bio?: string;
+    image?: string;
+    linkedin?: string;
+    twitter?: string;
+}
+
+interface Props {
+    heading?: string;
+    subheading?: string;
+    members: TeamMember[];
+    columns?: "3" | "4";
+}
+
+const { heading, subheading, members = [], columns = "4" } = Astro.props;
+
+const gridCols: Record<string, string> = {
+    "3": "grid-cols-3",
+    "4": "grid-cols-4",
+};
+---
+
+<section class="team-section section">
+    <div class="container">
+        {
+            (heading || subheading) && (
+                <div class="section-header">
+                    {heading && <h2 class="section-title">{heading}</h2>}
+                    {subheading && <p class="section-subtitle">{subheading}</p>}
+                </div>
+            )
+        }
+
+        <div class={`team-grid ${gridCols[columns]}`}>
+            {
+                members.map((member, index) => (
+                    <article
+                        class="team-card"
+                        style={`animation-delay: ${index * 0.1}s`}
+                    >
+                        <div class="member-image-wrapper">
+                            {member.image ? (
+                                <img
+                                    src={member.image}
+                                    alt={member.name}
+                                    class="member-image"
+                                    loading="lazy"
+                                />
+                            ) : (
+                                <div class="member-placeholder">
+                                    <svg
+                                        width="48"
+                                        height="48"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="1.5"
+                                    >
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                                        <circle cx="12" cy="7" r="4" />
+                                    </svg>
+                                </div>
+                            )}
+
+                            {(member.linkedin || member.twitter) && (
+                                <div class="member-social">
+                                    {member.linkedin && (
+                                        <a
+                                            href={member.linkedin}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            class="social-link"
+                                            aria-label="LinkedIn"
+                                        >
+                                            <svg
+                                                width="18"
+                                                height="18"
+                                                viewBox="0 0 24 24"
+                                                fill="currentColor"
+                                            >
+                                                <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
+                                                <rect
+                                                    x="2"
+                                                    y="9"
+                                                    width="4"
+                                                    height="12"
+                                                />
+                                                <circle cx="4" cy="4" r="2" />
+                                            </svg>
+                                        </a>
+                                    )}
+                                    {member.twitter && (
+                                        <a
+                                            href={member.twitter}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            class="social-link"
+                                            aria-label="Twitter"
+                                        >
+                                            <svg
+                                                width="18"
+                                                height="18"
+                                                viewBox="0 0 24 24"
+                                                fill="currentColor"
+                                            >
+                                                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                                            </svg>
+                                        </a>
+                                    )}
+                                </div>
+                            )}
+                        </div>
+
+                        <div class="member-content">
+                            <h3 class="member-name">{member.name}</h3>
+                            <span class="member-role">{member.role}</span>
+                            {member.bio && (
+                                <p class="member-bio">{member.bio}</p>
+                            )}
+                        </div>
+                    </article>
+                ))
+            }
+        </div>
+    </div>
+</section>
+
+<style>
+    .team-section {
+        background: var(--color-background);
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 4rem;
+    }
+
+    .section-title {
+        margin-bottom: 1rem;
+    }
+
+    .section-subtitle {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    .team-grid {
+        display: grid;
+        gap: 2rem;
+    }
+
+    .grid-cols-3 {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .grid-cols-4 {
+        grid-template-columns: repeat(4, 1fr);
+    }
+
+    .team-card {
+        text-align: center;
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 0.6s ease forwards;
+    }
+
+    .member-image-wrapper {
+        position: relative;
+        margin-bottom: 1.5rem;
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+    }
+
+    .member-image {
+        width: 100%;
+        aspect-ratio: 1;
+        object-fit: cover;
+        transition: transform 0.6s ease;
+    }
+
+    .team-card:hover .member-image {
+        transform: scale(1.05);
+    }
+
+    .member-placeholder {
+        width: 100%;
+        aspect-ratio: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--color-surface);
+        color: var(--color-text-muted);
+    }
+
+    .member-social {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        display: flex;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 1rem;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+        opacity: 0;
+        transform: translateY(100%);
+        transition: all 0.3s ease;
+    }
+
+    .team-card:hover .member-social {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .social-link {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 36px;
+        height: 36px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: var(--radius-base);
+        color: white;
+        transition: all 0.3s ease;
+    }
+
+    .social-link:hover {
+        background: var(--color-accent);
+        transform: translateY(-2px);
+    }
+
+    .member-content {
+        padding: 0 0.5rem;
+    }
+
+    .member-name {
+        font-size: 1.2rem;
+        margin-bottom: 0.25rem;
+    }
+
+    .member-role {
+        display: block;
+        font-size: 0.9rem;
+        color: var(--color-accent);
+        margin-bottom: 0.75rem;
+    }
+
+    .member-bio {
+        font-size: 0.9rem;
+        color: var(--color-text-muted);
+        line-height: 1.6;
+        display: -webkit-box;
+        -webkit-line-clamp: 3;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 1024px) {
+        .grid-cols-4 {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .team-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 480px) {
+        .team-grid {
+            grid-template-columns: 1fr;
+            max-width: 300px;
+            margin: 0 auto;
+        }
+    }
+</style>

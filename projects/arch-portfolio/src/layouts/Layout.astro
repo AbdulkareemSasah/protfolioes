@@ -1,0 +1,152 @@
+---
+import { getEntry } from "astro:content";
+import "@/styles/global.css";
+import { ClientRouter } from 'astro:transitions';
+
+// Fetch all settings
+const theme = await getEntry("settings", "theme");
+const site = await getEntry("settings", "site");
+const header = await getEntry("settings", "header");
+const footer = await getEntry("settings", "footer");
+const labels = await getEntry("settings", "labels");
+
+// Theme values with fallbacks
+const themeData = theme?.data ?? {
+    colorPrimary: "#1a1a2e",
+    colorSecondary: "#16213e",
+    colorAccent: "#e94560",
+    colorBackground: "#0f0f1a",
+    colorSurface: "#1a1a2e",
+    colorText: "#eaeaea",
+    colorTextMuted: "#a0a0a0",
+    borderRadius: "8",
+    fontHeading: "Cairo",
+    fontBody: "Tajawal",
+};
+
+const siteData = site?.data ?? {
+    siteName: "مكتب معماري",
+    siteDescription: "مكتب معماري متخصص في التصميم المعماري",
+};
+
+interface Props {
+    title?: string;
+    description?: string;
+    ogImage?: string;
+}
+
+const { title, description, ogImage } = Astro.props;
+const pageTitle = title ? `${title} | ${siteData.siteName}` : siteData.siteName;
+const pageDescription = description || siteData.siteDescription;
+---
+
+<!doctype html>
+<html lang="ar" dir="rtl">
+    <head>
+        <ClientRouter />
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta name="description" content={pageDescription} />
+        <meta name="generator" content={Astro.generator} />
+
+        <!-- Open Graph -->
+        <meta property="og:title" content={pageTitle} />
+        <meta property="og:description" content={pageDescription} />
+        <meta property="og:type" content="website" />
+        {ogImage && <meta property="og:image" content={ogImage} />}
+
+        <!-- Favicon -->
+        {
+            siteData.favicon && (
+                <link rel="icon" type="image/x-icon" href={siteData.favicon} />
+            )
+        }
+
+        <!-- Google Fonts -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href={`https://fonts.googleapis.com/css2?family=${themeData.fontHeading}:wght@400;500;600;700&family=${themeData.fontBody}:wght@300;400;500;600;700&display=swap`}
+            rel="stylesheet"
+        />
+
+        <title>{pageTitle}</title>
+
+        <!-- Dynamic CSS Variables -->
+        <style
+            define:vars={{
+                "color-primary": themeData.colorPrimary,
+                "color-secondary": themeData.colorSecondary,
+                "color-accent": themeData.colorAccent,
+                "color-background": themeData.colorBackground,
+                "color-surface": themeData.colorSurface,
+                "color-text": themeData.colorText,
+                "color-text-muted": themeData.colorTextMuted,
+                "radius-base": `${themeData.borderRadius}px`,
+                "font-heading": themeData.fontHeading,
+                "font-body": themeData.fontBody,
+            }}
+        >
+            :root {
+                --color-primary: var(--color-primary);
+                --color-secondary: var(--color-secondary);
+                --color-accent: var(--color-accent);
+                --color-background: var(--color-background);
+                --color-surface: var(--color-surface);
+                --color-text: var(--color-text);
+                --color-text-muted: var(--color-text-muted);
+                --radius-base: var(--radius-base);
+                --radius-sm: calc(var(--radius-base) * 0.5);
+                --radius-lg: calc(var(--radius-base) * 1.5);
+                --radius-xl: calc(var(--radius-base) * 2);
+                --radius-full: 9999px;
+                --font-heading: var(--font-heading), sans-serif;
+                --font-body: var(--font-body), sans-serif;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <slot name="header">
+                <!-- Default header will be inserted here -->
+            </slot>
+
+            <main>
+                <slot />
+            </main>
+
+            <slot name="footer">
+                <!-- Default footer will be inserted here -->
+            </slot>
+        </div>
+
+        <script is:inline>
+            // Theme toggle functionality
+            const initTheme = () => {
+                const savedTheme = localStorage.getItem("theme");
+                const prefersDark = window.matchMedia(
+                    "(prefers-color-scheme: dark)",
+                ).matches;
+
+                if (savedTheme === "light") {
+                    document.documentElement.classList.add("light-mode");
+                } else if (savedTheme === "dark") {
+                    document.documentElement.classList.remove("light-mode");
+                } else {
+                    // System preference fallback
+                    if (!prefersDark) {
+                        document.documentElement.classList.add("light-mode");
+                    } else {
+                        document.documentElement.classList.remove("light-mode");
+                    }
+                }
+            };
+
+            // Run on initial load
+            initTheme();
+
+            // Run on view transitions navigation
+            document.addEventListener('astro:after-swap', initTheme);
+        </script>
+    </body>
+</html>

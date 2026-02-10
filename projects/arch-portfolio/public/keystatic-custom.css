@@ -1,0 +1,18 @@
+/* Hide repository info and branch selector in Keystatic UI */
+a[href*="github.com"],
+button[aria-haspopup="listbox"] {
+    display: none !important;
+}
+
+/* Specific targeting for branch/repo info if classes change */
+[data-testid="branch-picker"],
+[data-testid="repo-link"] {
+    display: none !important;
+}
+
+/* Hide the user avatar/menu if desired (optional, uncomment to hide) */
+/* 
+[aria-label="User menu"] {
+    display: none !important;
+} 
+*/

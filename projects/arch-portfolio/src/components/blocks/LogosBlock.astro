@@ -1,0 +1,179 @@
+---
+interface Logo {
+    name?: string;
+    image: string;
+    link?: string;
+}
+
+interface Props {
+    heading?: string;
+    logos: Logo[];
+    animate?: boolean;
+    grayscale?: boolean;
+}
+
+const { heading, logos = [], animate = true, grayscale = true } = Astro.props;
+
+// Duplicate logos for infinite scroll effect
+const duplicatedLogos = animate ? [...logos, ...logos] : logos;
+---
+
+<section class="logos-section section">
+    <div class="container">
+        {
+            heading && (
+                <div class="section-header">
+                    <h2 class="section-title">{heading}</h2>
+                </div>
+            )
+        }
+    </div>
+
+    <div class={`logos-wrapper ${animate ? "animate" : ""}`}>
+        <div class={`logos-track ${grayscale ? "grayscale" : ""}`}>
+            {
+                duplicatedLogos.map((logo, index) =>
+                    logo.link ? (
+                        <a
+                            href={logo.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            class="logo-item"
+                            title={logo.name}
+                        >
+                            <img
+                                src={logo.image}
+                                alt={logo.name || `Logo ${index + 1}`}
+                            />
+                        </a>
+                    ) : (
+                        <div class="logo-item" title={logo.name}>
+                            <img
+                                src={logo.image}
+                                alt={logo.name || `Logo ${index + 1}`}
+                            />
+                        </div>
+                    ),
+                )
+            }
+        </div>
+    </div>
+</section>
+
+<style>
+    .logos-section {
+        background: var(--color-surface);
+        padding: 3rem 0;
+        overflow: hidden;
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        color: var(--color-text-muted);
+    }
+
+    .logos-wrapper {
+        position: relative;
+        overflow: hidden;
+    }
+
+    .logos-wrapper::before,
+    .logos-wrapper::after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        width: 150px;
+        z-index: 2;
+        pointer-events: none;
+    }
+
+    .logos-wrapper::before {
+        right: 0;
+        background: linear-gradient(to left, var(--color-surface), transparent);
+    }
+
+    .logos-wrapper::after {
+        left: 0;
+        background: linear-gradient(
+            to right,
+            var(--color-surface),
+            transparent
+        );
+    }
+
+    .logos-track {
+        display: flex;
+        align-items: center;
+        gap: 4rem;
+        padding: 1rem 0;
+    }
+
+    .logos-wrapper.animate .logos-track {
+        animation: scroll 30s linear infinite;
+        width: max-content;
+    }
+
+    .logos-wrapper.animate:hover .logos-track {
+        animation-play-state: paused;
+    }
+
+    .logo-item {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 60px;
+        transition: all 0.3s ease;
+    }
+
+    .logo-item img {
+        max-height: 100%;
+        max-width: 150px;
+        object-fit: contain;
+        transition: all 0.3s ease;
+    }
+
+    .logos-track.grayscale .logo-item img {
+        filter: grayscale(100%);
+        opacity: 0.6;
+    }
+
+    .logos-track.grayscale .logo-item:hover img {
+        filter: grayscale(0%);
+        opacity: 1;
+    }
+
+    @keyframes scroll {
+        from {
+            transform: translateX(0);
+        }
+        to {
+            transform: translateX(-50%);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .logos-track {
+            gap: 2rem;
+        }
+
+        .logo-item {
+            height: 40px;
+        }
+
+        .logo-item img {
+            max-width: 100px;
+        }
+
+        .logos-wrapper::before,
+        .logos-wrapper::after {
+            width: 50px;
+        }
+    }
+</style>

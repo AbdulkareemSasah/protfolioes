@@ -1,0 +1,86 @@
+{
+    "columns": [
+        {
+            "title": "الشركة",
+            "links": [
+                {
+                    "label": "من نحن",
+                    "link": {
+                        "discriminant": "page",
+                        "value": "about"
+                    }
+                },
+                {
+                    "label": "فريق العمل",
+                    "link": {
+                        "discriminant": "custom",
+                        "value": "/team"
+                    }
+                },
+                {
+                    "label": "وظائف",
+                    "link": {
+                        "discriminant": "custom",
+                        "value": "/careers"
+                    }
+                }
+            ]
+        },
+        {
+            "title": "خدماتنا",
+            "links": [
+                {
+                    "label": "التصميم المعماري",
+                    "link": {
+                        "discriminant": "custom",
+                        "value": "/services/architectural-design"
+                    }
+                },
+                {
+                    "label": "التصميم الداخلي",
+                    "link": {
+                        "discriminant": "custom",
+                        "value": "/services/interior-design"
+                    }
+                },
+                {
+                    "label": "التخطيط العمراني",
+                    "link": {
+                        "discriminant": "custom",
+                        "value": "/services/urban-planning"
+                    }
+                }
+            ]
+        },
+        {
+            "title": "تواصل معنا",
+            "links": [
+                {
+                    "label": "اتصل بنا",
+                    "link": {
+                        "discriminant": "custom",
+                        "value": "/contact"
+                    }
+                },
+                {
+                    "label": "الموقع",
+                    "link": {
+                        "discriminant": "custom",
+                        "value": "/location"
+                    }
+                }
+            ]
+        }
+    ],
+    "showSocial": true,
+    "socialLinks": {
+        "facebook": "",
+        "twitter": "",
+        "instagram": "",
+        "linkedin": "",
+        "youtube": "",
+        "whatsapp": ""
+    },
+    "copyrightText": "© {year} مكتب معماري. جميع الحقوق محفوظة",
+    "showBackToTop": true
+}

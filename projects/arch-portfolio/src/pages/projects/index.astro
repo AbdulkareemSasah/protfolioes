@@ -1,0 +1,100 @@
+---
+// Projects listing page
+import { getCollection, getEntry } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/layout/Header.astro";
+import Footer from "../../components/layout/Footer.astro";
+import ProjectsGridBlock from "../../components/blocks/ProjectsGridBlock.astro";
+
+export const prerender = true;
+
+// Get settings
+const header = await getEntry("settings", "header");
+const footer = await getEntry("settings", "footer");
+const site = await getEntry("settings", "site");
+const labels = await getEntry("settings", "labels");
+
+const headerData = header?.data ?? {
+    navigation: [],
+    showCta: true,
+    ctaText: "تواصل معنا",
+    ctaLink: "/contact",
+    showThemeToggle: true,
+    logoPosition: "right",
+};
+
+const footerData = footer?.data ?? {
+    columns: [],
+    showSocial: true,
+    socialLinks: {},
+    copyrightText: "© {year} جميع الحقوق محفوظة",
+    showBackToTop: true,
+};
+
+const siteData = site?.data ?? {
+    siteName: "مكتب معماري",
+    logo: null,
+};
+
+const labelsData = labels?.data ?? {};
+---
+
+<Layout title="المشاريع" description="استعرض مشاريعنا المعمارية المتميزة">
+    <Header
+        slot="header"
+        siteName={siteData.siteName}
+        logo={siteData.logo}
+        logoPosition={headerData.logoPosition}
+        navigation={headerData.navigation}
+        showCta={headerData.showCta}
+        ctaText={headerData.ctaText}
+        ctaLink={headerData.ctaLink}
+        showThemeToggle={headerData.showThemeToggle}
+    />
+
+    <main style="padding-top: 80px;">
+        <section class="section">
+            <div class="container">
+                <div class="page-header">
+                    <h1>المشاريع</h1>
+                    <p>استعرض أحدث مشاريعنا المعمارية المتميزة</p>
+                </div>
+            </div>
+        </section>
+
+        <ProjectsGridBlock
+            count={100}
+            columns="3"
+            showFilters={true}
+            viewProjectLabel={labelsData.viewProject || "عرض المشروع"}
+        />
+    </main>
+
+    <Footer
+        slot="footer"
+        siteName={siteData.siteName}
+        logo={siteData.logo}
+        columns={footerData.columns}
+        showSocial={footerData.showSocial}
+        socialLinks={footerData.socialLinks}
+        copyrightText={footerData.copyrightText}
+        showBackToTop={footerData.showBackToTop}
+    />
+</Layout>
+
+<style>
+    .page-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+
+    .page-header h1 {
+        font-size: clamp(2rem, 4vw, 3rem);
+        margin-bottom: 1rem;
+    }
+
+    .page-header p {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+</style>

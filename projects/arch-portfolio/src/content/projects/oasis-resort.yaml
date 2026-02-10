@@ -1,0 +1,24 @@
+title: منتجع الواحة
+slug: oasis-resort
+description: منتجع سياحي بيئي يعتمد على المواد الطبيعية والطاقة المتجددة.
+featuredImage: null
+gallery: []
+client: وزارة السياحة
+location: العلا
+year: '2022'
+area: 100,000 م²
+category: urban-planning
+tags:
+  - sustainable
+  - luxury
+featured: false
+blocks:
+  - discriminant: features
+    value:
+      heading: مميزات المنتجع
+      features:
+        - title: صديق للبيئة
+          description: يعتمد بالكامل على الطاقة الشمسية
+        - title: مواد محلية
+          description: تم استخدام الحجر الطبيعي من المنطقة
+      columns: '2'

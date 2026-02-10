@@ -1,0 +1,33 @@
+title: فيلا النخيل
+slug: palm-villa
+description: فيلا سكنية فاخرة تتميز بالتصميم العصري والواجهات الزجاجية.
+featuredImage: null
+gallery: []
+client: عائلة السعد
+location: الرياض، حي النخيل
+year: '2023'
+area: 1200 م²
+category: residential
+tags:
+  - modern
+  - luxury
+featured: true
+blocks:
+  - discriminant: text
+    value:
+      content: |
+        # فيلا النخيل
+        
+        تم تصميم هذه الفيلا لتكون ملاذاً هادئاً وسط المدينة. ركزنا في التصميم على الخصوصية مع توفير مساحات مفتوحة وإضاءة طبيعية.
+        
+        ## تفاصيل المشروع
+        - **المساحة:** 1200 متر مربع
+        - **الموقع:** حي النخيل، الرياض
+        - **النمط:** مودرن
+      maxWidth: md
+  - discriminant: gallery
+    value:
+      heading: صور المشروع
+      images: []
+      layout: grid
+      columns: '2'

@@ -1,0 +1,407 @@
+---
+// Project detail page
+import { getCollection, getEntry } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/layout/Header.astro";
+import Footer from "../../components/layout/Footer.astro";
+import BlockRenderer from "../../components/BlockRenderer.astro";
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+    const projects = await getCollection("projects");
+
+    return projects.map((project) => ({
+        params: { slug: project.id.replace(/\.[^/.]+$/, "") },
+        props: { project },
+    }));
+}
+
+const { project } = Astro.props;
+
+// Get settings
+const header = await getEntry("settings", "header");
+const footer = await getEntry("settings", "footer");
+const site = await getEntry("settings", "site");
+const labels = await getEntry("settings", "labels");
+
+const headerData = header?.data ?? {
+    navigation: [],
+    showCta: true,
+    ctaText: "تواصل معنا",
+    ctaLink: "/contact",
+    showThemeToggle: true,
+    logoPosition: "right",
+};
+
+const footerData = footer?.data ?? {
+    columns: [],
+    showSocial: true,
+    socialLinks: {},
+    copyrightText: "© {year} جميع الحقوق محفوظة",
+    showBackToTop: true,
+};
+
+const siteData = site?.data ?? {
+    siteName: "مكتب معماري",
+    logo: null,
+};
+
+const labelsData = labels?.data ?? {
+    projectInfo: "معلومات المشروع",
+    client: "العميل",
+    location: "الموقع",
+    year: "السنة",
+    area: "المساحة",
+    backToProjects: "العودة للمشاريع",
+};
+---
+
+<Layout
+    title={project.data.title}
+    description={project.data.description}
+    ogImage={project.data.featuredImage}
+>
+    <Header
+        slot="header"
+        siteName={siteData.siteName}
+        logo={siteData.logo}
+        logoPosition={headerData.logoPosition}
+        navigation={headerData.navigation}
+        showCta={headerData.showCta}
+        ctaText={headerData.ctaText}
+        ctaLink={headerData.ctaLink}
+        showThemeToggle={headerData.showThemeToggle}
+    />
+
+    <main class="project-page">
+        <!-- Hero Section -->
+        <section class="project-hero">
+            {
+                project.data.featuredImage && (
+                    <div class="hero-background">
+                        <img
+                            src={project.data.featuredImage}
+                            alt={project.data.title}
+                            class="hero-image"
+                        />
+                        <div class="hero-overlay" />
+                    </div>
+                )
+            }
+
+            <div class="container">
+                <div class="hero-content">
+                    <a href="/projects" class="back-link">
+                        <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        >
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                        {labelsData.backToProjects}
+                    </a>
+                    <h1 class="project-title">{project.data.title}</h1>
+                    {
+                        project.data.description && (
+                            <p class="project-description">
+                                {project.data.description}
+                            </p>
+                        )
+                    }
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Info -->
+        <section class="project-info section">
+            <div class="container">
+                <div class="info-grid">
+                    <div class="info-main">
+                        {/* Render page builder blocks if available */}
+                        {
+                            project.data.blocks &&
+                                project.data.blocks.length > 0 && (
+                                    <BlockRenderer
+                                        blocks={project.data.blocks}
+                                        labels={labelsData}
+                                    />
+                                )
+                        }
+
+                        {/* Gallery */}
+                        {
+                            project.data.gallery &&
+                                project.data.gallery.length > 0 && (
+                                    <div class="project-gallery">
+                                        {project.data.gallery.map(
+                                            (image: string, index: number) => (
+                                                <div class="gallery-item">
+                                                    <img
+                                                        src={image}
+                                                        alt={`${project.data.title} - صورة ${index + 1}`}
+                                                        loading="lazy"
+                                                    />
+                                                </div>
+                                            ),
+                                        )}
+                                    </div>
+                                )
+                        }
+                    </div>
+
+                    <aside class="info-sidebar">
+                        <div class="info-card">
+                            <h3 class="info-card-title">
+                                {labelsData.projectInfo}
+                            </h3>
+
+                            {
+                                project.data.client && (
+                                    <div class="info-row">
+                                        <span class="info-label">
+                                            {labelsData.client}
+                                        </span>
+                                        <span class="info-value">
+                                            {project.data.client}
+                                        </span>
+                                    </div>
+                                )
+                            }
+
+                            {
+                                project.data.location && (
+                                    <div class="info-row">
+                                        <span class="info-label">
+                                            {labelsData.location}
+                                        </span>
+                                        <span class="info-value">
+                                            {project.data.location}
+                                        </span>
+                                    </div>
+                                )
+                            }
+
+                            {
+                                project.data.year && (
+                                    <div class="info-row">
+                                        <span class="info-label">
+                                            {labelsData.year}
+                                        </span>
+                                        <span class="info-value">
+                                            {project.data.year}
+                                        </span>
+                                    </div>
+                                )
+                            }
+
+                            {
+                                project.data.area && (
+                                    <div class="info-row">
+                                        <span class="info-label">
+                                            {labelsData.area}
+                                        </span>
+                                        <span class="info-value">
+                                            {project.data.area}
+                                        </span>
+                                    </div>
+                                )
+                            }
+                        </div>
+                    </aside>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <Footer
+        slot="footer"
+        siteName={siteData.siteName}
+        logo={siteData.logo}
+        columns={footerData.columns}
+        showSocial={footerData.showSocial}
+        socialLinks={footerData.socialLinks}
+        copyrightText={footerData.copyrightText}
+        showBackToTop={footerData.showBackToTop}
+    />
+</Layout>
+
+<style>
+    .project-page {
+        padding-top: 0;
+    }
+
+    .project-hero {
+        position: relative;
+        min-height: 60vh;
+        display: flex;
+        align-items: flex-end;
+        padding: 4rem 0;
+    }
+
+    .hero-background {
+        position: absolute;
+        inset: 0;
+    }
+
+    .hero-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            to top,
+            rgba(15, 15, 26, 0.95) 0%,
+            rgba(15, 15, 26, 0.5) 50%,
+            rgba(15, 15, 26, 0.3) 100%
+        );
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+        max-width: 800px;
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--color-text-muted);
+        text-decoration: none;
+        margin-bottom: 1.5rem;
+        transition: color 0.3s ease;
+    }
+
+    .back-link:hover {
+        color: var(--color-accent);
+    }
+
+    .project-title {
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        margin-bottom: 1rem;
+    }
+
+    .project-description {
+        font-size: 1.15rem;
+        line-height: 1.7;
+        max-width: 600px;
+    }
+
+    .project-info {
+        background: var(--color-background);
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: 1fr 350px;
+        gap: 3rem;
+        align-items: start;
+    }
+
+    .info-main {
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+    }
+
+    .project-gallery {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .gallery-item {
+        border-radius: var(--radius-lg);
+        overflow: hidden;
+    }
+
+    .gallery-item:first-child {
+        grid-column: span 2;
+    }
+
+    .gallery-item img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.6s ease;
+    }
+
+    .gallery-item:hover img {
+        transform: scale(1.05);
+    }
+
+    .info-sidebar {
+        position: sticky;
+        top: 100px;
+    }
+
+    .info-card {
+        background: var(--color-surface);
+        padding: 2rem;
+        border-radius: var(--radius-lg);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .info-card-title {
+        font-size: 1.25rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .info-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+    }
+
+    .info-row:last-child {
+        border-bottom: none;
+    }
+
+    .info-label {
+        font-size: 0.9rem;
+        color: var(--color-text-muted);
+    }
+
+    .info-value {
+        font-weight: 500;
+        color: var(--color-text);
+    }
+
+    @media (max-width: 1024px) {
+        .info-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .info-sidebar {
+            position: static;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .project-hero {
+            min-height: 50vh;
+        }
+
+        .project-gallery {
+            grid-template-columns: 1fr;
+        }
+
+        .gallery-item:first-child {
+            grid-column: span 1;
+        }
+    }
+</style>

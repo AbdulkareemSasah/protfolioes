@@ -1,0 +1,26 @@
+title: برج الأفق
+slug: برج الافق
+description: برج تجاري إداري بارتفاع 40 طابقاً في قلب المركز المالي.
+gallery: []
+client: شركة الاستثمار العقاري
+location: دبي، الإمارات
+year: '2024'
+area: 45,000 م²
+category: commercial
+tags:
+  - sustainable
+  - modern
+featured: true
+blocks:
+  - discriminant: stats
+    value:
+      heading: حقائق عن البرج
+      stats:
+        - number: '40'
+          label: طابق
+        - number: '45000'
+          label: متر مربع
+          suffix: م²
+        - number: '200'
+          label: مكتب
+      backgroundColor: secondary

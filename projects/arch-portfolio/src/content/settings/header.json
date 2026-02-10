@@ -1,0 +1,45 @@
+{
+    "logoPosition": "right",
+    "navigation": [
+        {
+            "label": "الرئيسية",
+            "link": {
+                "discriminant": "page",
+                "value": "home"
+            },
+            "isDropdown": false,
+            "dropdownItems": []
+        },
+        {
+            "label": "المشاريع",
+            "link": {
+                "discriminant": "custom",
+                "value": "/projects"
+            },
+            "isDropdown": false,
+            "dropdownItems": []
+        },
+        {
+            "label": "الخدمات",
+            "link": {
+                "discriminant": "custom",
+                "value": "/services"
+            },
+            "isDropdown": false,
+            "dropdownItems": []
+        },
+        {
+            "label": "من نحن",
+            "link": {
+                "discriminant": "page",
+                "value": "about"
+            },
+            "isDropdown": false,
+            "dropdownItems": []
+        }
+    ],
+    "showCta": true,
+    "ctaText": "تواصل معنا",
+    "ctaLink": "/contact",
+    "showThemeToggle": true
+}

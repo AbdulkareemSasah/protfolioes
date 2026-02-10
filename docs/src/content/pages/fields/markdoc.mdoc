@@ -1,0 +1,99 @@
+---
+title: Markdoc field
+summary: WYSIWYG editor for Markdoc
+---
+
+The `markdoc` is an evolution of the `document` field using a new editor. It looks and feels similar to the `document` field, but has extended capabilities.
+
+## Example usage
+
+```tsx
+// Keystatic config
+import { fields } from '@keystatic/core'
+
+// Inside a collection...
+schema: {
+ richText: fields.markdoc({
+  label: 'Rich text'
+ })
+}
+```
+
+Keystatic will store content and retrieve it for you using the [Reader API](/docs/reader-api), but you are responsible for rendering the Markdoc content. 
+
+You can use community tools or build your own.
+
+---
+
+## Use .md files instead of .mdoc
+
+The `extension` lets you use `.md` files instead of `.mdoc` for Markdoc collections or singletons:
+
+```diff
+content: fields.markdoc({
+  label: 'Content',
++  extension: 'md',
+  // ...
+})
+```
+
+---
+
+## Content components
+
+The `markdoc` field uses the new-generation and more capable [content components](/docs/content-components):
+
+```diff
+richText: fields.markdoc({
+ label: 'Rich text',
++ components: {
++  // Add custom components here
++ } 
+})
+```
+Checkout the [content components](/docs/content-components) docs to learn how to create advanced editing experiences with the `markdoc` field.
+
+---
+
+## Inline
+
+By default, `fields.markdoc` will output content in a seperate file to the main data or below the main data if using `format.contentField`. If you want to have multiple pieces of content in the same file, you can use `fields.markdoc.inline(...)`:
+
+```tsx
+someContent: fields.markdoc.inline({
+ label: 'Some content',
+})
+```
+
+this will write content next to other fields like this instead of in a different file:
+
+```yaml
+someContent: |
+  # Title
+
+  Some content
+```
+
+---
+
+## Formatting options
+
+The editor can be customised to allow a range of formatting options. This is done via `options`.
+
+See the type signature for `MarkdocEditorOptions` for the full set of options:
+[https://docsmill.dev/npm/@keystatic/core@latest#/.fields.markdoc.MarkdocEditorOptions](https://docsmill.dev/npm/@keystatic/core@latest#/.fields.markdoc.MarkdocEditorOptions)
+
+---
+
+## Image options
+
+The directory where images are stored can be customised in the same way as [`fields.image`](/docs/fields/image) with `directory` and `publicPath`. Though unlike [`fields.image`](/docs/fields/image) outside the editor where image filenames are determined by the key in the schema where the field is, filenames for images in the editor can be customised directly in the editor.
+
+See the type signature for `MarkdocEditorOptions.image` for the full set of options:
+[https://docsmill.dev/npm/@keystatic/core@latest#/.fields.markdoc.MarkdocEditorOptions](https://docsmill.dev/npm/@keystatic/core@latest#/.fields.markdoc.MarkdocEditorOptions)
+
+---
+
+## Type signature
+
+Find the latest version of this field's type signature at: [https://docsmill.dev/npm/@keystatic/core#/.fields.markdoc](https://docsmill.dev/npm/@keystatic/core#/.fields.markdoc)

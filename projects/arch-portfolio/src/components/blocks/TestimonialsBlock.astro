@@ -1,0 +1,439 @@
+---
+interface Testimonial {
+    quote: string;
+    author: string;
+    role?: string;
+    company?: string;
+    image?: string;
+}
+
+interface Props {
+    heading?: string;
+    testimonials: Testimonial[];
+    displayStyle?: "grid" | "slider" | "list";
+}
+
+const { heading, testimonials = [], displayStyle = "slider" } = Astro.props;
+
+const sliderId = `testimonials-${Math.random().toString(36).substr(2, 9)}`;
+---
+
+<section class="testimonials-section section">
+    <div class="container">
+        {
+            heading && (
+                <div class="section-header">
+                    <h2 class="section-title">{heading}</h2>
+                </div>
+            )
+        }
+
+        {
+            displayStyle === "slider" ? (
+                <div class="testimonials-slider" id={sliderId}>
+                    <div class="slider-track">
+                        {testimonials.map((testimonial, index) => (
+                            <div class="testimonial-slide" data-index={index}>
+                                <div class="testimonial-card">
+                                    <div class="quote-icon">
+                                        <svg
+                                            width="40"
+                                            height="40"
+                                            viewBox="0 0 24 24"
+                                            fill="currentColor"
+                                        >
+                                            <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                                        </svg>
+                                    </div>
+                                    <blockquote class="testimonial-quote">
+                                        {testimonial.quote}
+                                    </blockquote>
+                                    <div class="testimonial-author">
+                                        {testimonial.image && (
+                                            <img
+                                                src={testimonial.image}
+                                                alt={testimonial.author}
+                                                class="author-image"
+                                            />
+                                        )}
+                                        <div class="author-info">
+                                            <strong class="author-name">
+                                                {testimonial.author}
+                                            </strong>
+                                            {(testimonial.role ||
+                                                testimonial.company) && (
+                                                <span class="author-role">
+                                                    {testimonial.role}
+                                                    {testimonial.role &&
+                                                        testimonial.company &&
+                                                        " - "}
+                                                    {testimonial.company}
+                                                </span>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div class="slider-controls">
+                        <button class="slider-btn prev" aria-label="السابق">
+                            <svg
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+                                <polyline points="9 18 15 12 9 6" />
+                            </svg>
+                        </button>
+                        <div class="slider-dots">
+                            {testimonials.map((_, index) => (
+                                <button
+                                    class={`dot ${index === 0 ? "active" : ""}`}
+                                    data-index={index}
+                                    aria-label={`Testimonial ${index + 1}`}
+                                />
+                            ))}
+                        </div>
+                        <button class="slider-btn next" aria-label="التالي">
+                            <svg
+                                width="20"
+                                height="20"
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                stroke-width="2"
+                            >
+                                <polyline points="15 18 9 12 15 6" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            ) : displayStyle === "grid" ? (
+                <div class="testimonials-grid">
+                    {testimonials.map((testimonial, index) => (
+                        <div
+                            class="testimonial-card"
+                            style={`animation-delay: ${index * 0.1}s`}
+                        >
+                            <div class="quote-icon">
+                                <svg
+                                    width="32"
+                                    height="32"
+                                    viewBox="0 0 24 24"
+                                    fill="currentColor"
+                                >
+                                    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                                </svg>
+                            </div>
+                            <blockquote class="testimonial-quote">
+                                {testimonial.quote}
+                            </blockquote>
+                            <div class="testimonial-author">
+                                {testimonial.image && (
+                                    <img
+                                        src={testimonial.image}
+                                        alt={testimonial.author}
+                                        class="author-image"
+                                    />
+                                )}
+                                <div class="author-info">
+                                    <strong class="author-name">
+                                        {testimonial.author}
+                                    </strong>
+                                    {(testimonial.role ||
+                                        testimonial.company) && (
+                                        <span class="author-role">
+                                            {testimonial.role}
+                                            {testimonial.role &&
+                                                testimonial.company &&
+                                                " - "}
+                                            {testimonial.company}
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            ) : (
+                <div class="testimonials-list">
+                    {testimonials.map((testimonial, index) => (
+                        <div
+                            class="testimonial-list-item"
+                            style={`animation-delay: ${index * 0.1}s`}
+                        >
+                            <blockquote class="testimonial-quote large">
+                                {testimonial.quote}
+                            </blockquote>
+                            <div class="testimonial-author">
+                                {testimonial.image && (
+                                    <img
+                                        src={testimonial.image}
+                                        alt={testimonial.author}
+                                        class="author-image large"
+                                    />
+                                )}
+                                <div class="author-info">
+                                    <strong class="author-name">
+                                        {testimonial.author}
+                                    </strong>
+                                    {(testimonial.role ||
+                                        testimonial.company) && (
+                                        <span class="author-role">
+                                            {testimonial.role}
+                                            {testimonial.role &&
+                                                testimonial.company &&
+                                                " - "}
+                                            {testimonial.company}
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+            )
+        }
+    </div>
+</section>
+
+<style>
+    .testimonials-section {
+        background: var(--color-surface);
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 4rem;
+    }
+
+    /* Slider */
+    .testimonials-slider {
+        position: relative;
+        max-width: 800px;
+        margin: 0 auto;
+        overflow: hidden;
+    }
+
+    .slider-track {
+        display: flex;
+        transition: transform 0.5s ease;
+    }
+
+    .testimonial-slide {
+        min-width: 100%;
+        padding: 0 1rem;
+    }
+
+    .slider-controls {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+        margin-top: 2rem;
+    }
+
+    .slider-btn {
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--color-background);
+        border: 2px solid rgba(255, 255, 255, 0.1);
+        border-radius: var(--radius-base);
+        color: var(--color-text);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .slider-btn:hover {
+        border-color: var(--color-accent);
+        color: var(--color-accent);
+    }
+
+    .slider-dots {
+        display: flex;
+        gap: 0.5rem;
+    }
+
+    .dot {
+        width: 10px;
+        height: 10px;
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        padding: 0;
+    }
+
+    .dot.active,
+    .dot:hover {
+        background: var(--color-accent);
+        transform: scale(1.2);
+    }
+
+    /* Card */
+    .testimonial-card {
+        background: var(--color-background);
+        padding: 2.5rem;
+        border-radius: var(--radius-lg);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        opacity: 0;
+        animation: fadeInUp 0.6s ease forwards;
+    }
+
+    .quote-icon {
+        color: var(--color-accent);
+        opacity: 0.3;
+        margin-bottom: 1.5rem;
+    }
+
+    .testimonial-quote {
+        font-size: 1.15rem;
+        line-height: 1.8;
+        color: var(--color-text);
+        margin: 0 0 2rem 0;
+        font-style: italic;
+    }
+
+    .testimonial-quote.large {
+        font-size: 1.5rem;
+    }
+
+    .testimonial-author {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .author-image {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .author-image.large {
+        width: 70px;
+        height: 70px;
+    }
+
+    .author-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+
+    .author-name {
+        font-size: 1rem;
+        color: var(--color-text);
+    }
+
+    .author-role {
+        font-size: 0.85rem;
+        color: var(--color-text-muted);
+    }
+
+    /* Grid */
+    .testimonials-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+    }
+
+    /* List */
+    .testimonials-list {
+        display: flex;
+        flex-direction: column;
+        gap: 3rem;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+
+    .testimonial-list-item {
+        text-align: center;
+        padding: 3rem;
+        background: var(--color-background);
+        border-radius: var(--radius-lg);
+        opacity: 0;
+        animation: fadeInUp 0.6s ease forwards;
+    }
+
+    .testimonial-list-item .testimonial-author {
+        justify-content: center;
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .testimonial-card {
+            padding: 1.5rem;
+        }
+
+        .testimonial-quote {
+            font-size: 1rem;
+        }
+
+        .testimonial-quote.large {
+            font-size: 1.15rem;
+        }
+    }
+</style>
+
+<script define:vars={{ sliderId }}>
+    const container = document.getElementById(sliderId);
+
+    if (container) {
+        const track = container.querySelector(".slider-track");
+        const slides = container.querySelectorAll(".testimonial-slide");
+        const prevBtn = container.querySelector(".prev");
+        const nextBtn = container.querySelector(".next");
+        const dots = container.querySelectorAll(".dot");
+
+        let currentIndex = 0;
+        const totalSlides = slides.length;
+
+        const updateSlider = () => {
+            if (track) {
+                track.style.transform = `translateX(${currentIndex * 100}%)`;
+            }
+
+            dots.forEach((dot, index) => {
+                dot.classList.toggle("active", index === currentIndex);
+            });
+        };
+
+        prevBtn?.addEventListener("click", () => {
+            currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+            updateSlider();
+        });
+
+        nextBtn?.addEventListener("click", () => {
+            currentIndex = (currentIndex + 1) % totalSlides;
+            updateSlider();
+        });
+
+        dots.forEach((dot, index) => {
+            dot.addEventListener("click", () => {
+                currentIndex = index;
+                updateSlider();
+            });
+        });
+    }
+</script>

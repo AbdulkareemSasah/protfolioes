@@ -1,0 +1,91 @@
+---
+// Dynamic page route - handles all pages from the CMS
+import { getCollection, getEntry } from "astro:content";
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/layout/Header.astro";
+import Footer from "../components/layout/Footer.astro";
+import BlockRenderer from "../components/BlockRenderer.astro";
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+    const pages = await getCollection("pages");
+
+    // Filter out home page since it's handled by index.astro
+    const otherPages = pages.filter(
+        (page) => page.id.replace(/\.[^/.]+$/, "") !== "home",
+    );
+
+    return otherPages.map((page) => {
+        const slug = page.id.replace(/\.[^/.]+$/, "");
+        console.log(`Generated page path: /${slug}`);
+        return {
+            params: { slug },
+            props: { page },
+        };
+    });
+}
+
+const { page } = Astro.props;
+
+// Get settings
+const header = await getEntry("settings", "header");
+const footer = await getEntry("settings", "footer");
+const site = await getEntry("settings", "site");
+const labels = await getEntry("settings", "labels");
+
+const headerData = header?.data ?? {
+    navigation: [],
+    showCta: true,
+    ctaText: "تواصل معنا",
+    ctaLink: "/contact",
+    showThemeToggle: true,
+    logoPosition: "right",
+};
+
+const footerData = footer?.data ?? {
+    columns: [],
+    showSocial: true,
+    socialLinks: {},
+    copyrightText: "© {year} جميع الحقوق محفوظة",
+    showBackToTop: true,
+};
+
+const siteData = site?.data ?? {
+    siteName: "مكتب معماري",
+    logo: null,
+};
+
+const labelsData = labels?.data ?? {};
+---
+
+<Layout
+    title={page.data.title}
+    description={page.data.description}
+    ogImage={page.data.ogImage}
+>
+    <Header
+        slot="header"
+        siteName={siteData.siteName}
+        logo={siteData.logo}
+        logoPosition={headerData.logoPosition}
+        navigation={headerData.navigation}
+        showCta={headerData.showCta}
+        ctaText={headerData.ctaText}
+        ctaLink={headerData.ctaLink}
+        showThemeToggle={headerData.showThemeToggle}
+    />
+
+    <BlockRenderer blocks={page.data.blocks || []} labels={labelsData} />
+
+    <Footer
+        slot="footer"
+        siteName={siteData.siteName}
+        logo={siteData.logo}
+        columns={footerData.columns}
+        showSocial={footerData.showSocial}
+        socialLinks={footerData.socialLinks}
+        copyrightText={footerData.copyrightText}
+        showBackToTop={footerData.showBackToTop}
+    />
+</Layout>

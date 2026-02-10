@@ -1,0 +1,32 @@
+title: برج السماء
+slug: sky-tower
+description: برج سكني فاخر يجمع بين التصميم العصري والاستدامة البيئية
+featuredImage: null
+gallery: []
+client: شركة التطوير العقاري
+location: الرياض، المملكة العربية السعودية
+year: '2024'
+area: 25,000 م²
+category: null
+tags: []
+featured: true
+blocks:
+  - discriminant: text
+    value:
+      content: |
+        # عن المشروع
+        
+        برج السماء هو مشروع سكني فاخر يمثل قمة التصميم المعماري المعاصر.
+        
+        ## المميزات الرئيسية
+        
+        - نظام تكييف مركزي ذكي
+        - واجهات زجاجية عازلة
+        - حدائق معلقة في كل طابق
+      maxWidth: md
+  - discriminant: gallery
+    value:
+      heading: معرض الصور
+      images: []
+      layout: masonry
+      columns: '3'

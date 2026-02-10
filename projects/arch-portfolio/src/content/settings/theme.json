@@ -1,0 +1,12 @@
+{
+  "colorPrimary": "#1a1a2e",
+  "colorSecondary": "#16213e",
+  "colorAccent": "#e94560",
+  "colorBackground": "#0f0f1a",
+  "colorSurface": "#1a1a2e",
+  "colorText": "#eaeaea",
+  "colorTextMuted": "#a0a0a0",
+  "borderRadius": "8",
+  "fontHeading": "IBM Plex Sans Arabic",
+  "fontBody": "Tajawal"
+}

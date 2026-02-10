@@ -1,0 +1,19 @@
+title: نبذة عني
+slug: about
+description: اي وصف
+blocks:
+  - discriminant: text
+    value:
+      maxWidth: md
+  - discriminant: hero
+    value:
+      title: لسيبل
+      subtitle: يبلسيبلسيبل
+      overlayOpacity: '0.5'
+      ctaText: سبشسيبشسيب
+      ctaLink: شسيبشسيب
+      alignment: center
+  - discriminant: spacer
+    value:
+      size: xl
+      showDivider: true

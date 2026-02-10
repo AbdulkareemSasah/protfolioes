@@ -1,0 +1,19 @@
+title: الإشراف الهندسي
+slug: supervision
+description: إشراف ومتابعة دقيقة لجميع مراحل التنفيذ لضمان الجودة.
+icon: hard-hat
+featuredImage: null
+category: commercial
+tags:
+  - sustainable
+order: 3
+blocks:
+  - discriminant: faq
+    value:
+      heading: أسئلة عن الإشراف
+      questions:
+        - question: كم مرة يتم زيارة الموقع؟
+          answer: يتم زيارة الموقع بشكل دوري حسب مراحل العمل وحاجة المشروع.
+        - question: هل يشمل الإشراف استلام الأعمال؟
+          answer: نعم، نقوم باستلام جميع الأعمال من المقاول لضمان مطابقتها للمواصفات.
+      style: accordion

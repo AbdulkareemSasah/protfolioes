@@ -1,0 +1,22 @@
+title: التصميم الداخلي
+slug: interior-design
+description: تصميم مساحات داخلية تعكس ذوقكم وتوفر الراحة والفخامة.
+icon: layout
+featuredImage: null
+category: residential
+tags:
+  - luxury
+  - modern
+order: 2
+blocks:
+  - discriminant: features
+    value:
+      heading: خدمات التصميم الداخلي
+      features:
+        - title: توزيع الأثاث
+          description: استغلال أمثل للمساحات
+        - title: اختيار المواد
+          description: انتقاء أفضل الخامات والألوان
+        - title: الإضاءة
+          description: تصميم إضاءة مدروس لإبراز جمال المكان
+      columns: '3'

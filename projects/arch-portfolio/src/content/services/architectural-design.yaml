@@ -1,0 +1,23 @@
+title: التصميم المعماري
+slug: architectural-design
+description: نقدم حلولاً معمارية مبتكرة تجمع بين الإبداع والوظيفية لتحقيق رؤيتكم.
+icon: ruler
+featuredImage: null
+category: commercial
+tags:
+  - modern
+  - sustainable
+order: 1
+blocks:
+  - discriminant: features
+    value:
+      heading: مميزات خدمتنا
+      subheading: نضمن لكم أعلى معايير الجودة في التصميم
+      features:
+        - title: دراسة الموقع
+          description: تحليل شامل للموقع والبيئة المحيطة
+        - title: التصميم المفاهيمي
+          description: رسومات أولية وثلاثية الأبعاد
+        - title: المخططات التنفيذية
+          description: رسومات دقيقة وجاهزة للتنفيذ
+      columns: '3'

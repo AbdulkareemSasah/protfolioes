@@ -1,0 +1,11 @@
+packages:
+  - 'design-system/docs'
+  - 'design-system/docs/storybook'
+  - 'design-system/pkg'
+  - 'design-system/primitives'
+  - 'dev-projects/*'
+  - 'docs'
+  - 'keystatic'
+  - 'packages/*'
+  - 'templates/*'
+  - 'projects/*'

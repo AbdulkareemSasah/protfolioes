@@ -1,0 +1,66 @@
+---
+import Layout from "../layouts/Layout.astro";
+import Header from "../components/layout/Header.astro";
+import Footer from "../components/layout/Footer.astro";
+import SearchComponent from "../components/Search.astro";
+import { getEntry } from "astro:content";
+
+const headerData = await getEntry("settings", "header");
+const footerData = await getEntry("settings", "footer");
+const siteData = await getEntry("settings", "site");
+---
+
+<Layout title="البحث">
+    <Header 
+        slot="header"
+        siteName={siteData?.data.siteName}
+        logo={siteData?.data.logo}
+        logoPosition={headerData?.data.logoPosition}
+        navigation={headerData?.data.navigation}
+        showCta={headerData?.data.showCta}
+        ctaText={headerData?.data.ctaText}
+        ctaLink={headerData?.data.ctaLink}
+        showThemeToggle={headerData?.data.showThemeToggle}
+    />
+
+    <div class="container page-content">
+        <h1 class="page-title">البحث في الموقع</h1>
+        <div class="search-wrapper">
+            <SearchComponent />
+        </div>
+    </div>
+
+    <Footer 
+        slot="footer"
+        siteName={siteData?.data.siteName}
+        logo={siteData?.data.logo}
+        columns={footerData?.data.columns}
+        showSocial={footerData?.data.showSocial}
+        socialLinks={footerData?.data.socialLinks}
+        copyrightText={footerData?.data.copyrightText}
+        showBackToTop={footerData?.data.showBackToTop}
+    />
+</Layout>
+
+<style>
+    .page-content {
+        padding-top: 120px;
+        padding-bottom: 4rem;
+        min-height: 60vh;
+    }
+
+    .page-title {
+        text-align: center;
+        margin-bottom: 3rem;
+        font-family: var(--font-heading);
+        font-size: 2.5rem;
+        color: var(--color-text);
+    }
+
+    .search-wrapper {
+        background: var(--color-surface);
+        padding: 2rem;
+        border-radius: var(--radius-lg);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    }
+</style>

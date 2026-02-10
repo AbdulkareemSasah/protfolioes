@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://archhakeem.vercel.app/sitemap-index.xml

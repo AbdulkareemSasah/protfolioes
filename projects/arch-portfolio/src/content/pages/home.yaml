@@ -1,0 +1,113 @@
+title: الرئيسية
+slug: home
+description: مكتب معماري متخصص في التصميم المعماري والتخطيط العمراني
+blocks:
+  - discriminant: hero
+    value:
+      title: نصمم مستقبل الحمارة
+      subtitle: >-
+        نحن مكتب معماري متخصص في التصميم المعماري المبتكر والتخطيط العمراني
+        المستدام. نحول أفكاركم إلى واقع معماري متميز.
+      overlayOpacity: '0.5'
+      ctaText: استعرض مشاريعنا
+      ctaLink: /projects
+      alignment: center
+  - discriminant: stats
+    value:
+      heading: إنجازاتنا بالأرقام
+      stats:
+        - number: '150'
+          label: مشروع منجز
+          suffix: +
+        - number: '25'
+          label: سنة خبرة
+        - number: '50'
+          label: عميل راضٍ
+          suffix: +
+        - number: '15'
+          label: جائزة معمارية
+      backgroundColor: primary
+  - discriminant: features
+    value:
+      heading: لماذا تختارنا؟
+      subheading: نقدم لكم تجربة معمارية استثنائية تجمع بين الإبداع والاحترافية
+      features:
+        - title: تصميم مبتكر
+          description: نبتكر تصاميم فريدة تعكس هوية عملائنا وتلبي احتياجاتهم
+        - title: جودة عالية
+          description: نلتزم بأعلى معايير الجودة في كل مرحلة من مراحل المشروع
+        - title: التزام بالمواعيد
+          description: نحرص على تسليم المشاريع في الوقت المحدد دون أي تأخير
+        - title: دعم مستمر
+          description: نوفر دعماً متواصلاً لعملائنا قبل وأثناء وبعد التنفيذ
+      columns: '4'
+  - discriminant: projectsGrid
+    value:
+      heading: أحدث مشاريعنا
+      subheading: استعرض مجموعة مختارة من أحدث مشاريعنا المعمارية المتميزة
+      count: 6
+      columns: '3'
+      showFilters: true
+  - discriminant: services
+    value:
+      heading: خدماتنا
+      subheading: نقدم مجموعة متكاملة من الخدمات المعمارية والتصميمية
+      showAll: true
+      selectedServices: []
+      cardStyle: icon
+  - discriminant: testimonials
+    value:
+      heading: ماذا يقول عملاؤنا
+      testimonials:
+        - quote: >-
+            تجربة رائعة مع فريق محترف. التصميم فاق توقعاتنا والتنفيذ كان
+            مثالياً.
+          author: أحمد الفهد
+          role: مدير عام
+          company: شركة الفهد للتطوير العقاري
+        - quote: فريق مبدع ومتميز. استطاعوا تحويل رؤيتنا إلى واقع معماري يفوق الخيال.
+          author: سارة العتيبي
+          role: مالكة
+          company: فيلا العتيبي
+        - quote: احترافية عالية والتزام تام بالجودة والمواعيد.
+          author: محمد السالم
+          role: مدير المشاريع
+          company: مجموعة السالم
+      displayStyle: slider
+  - discriminant: timeline
+    value:
+      heading: مسيرتنا
+      events:
+        - year: '1999'
+          title: تأسيس المكتب
+          description: بدأنا رحلتنا بفريق صغير وحلم كبير
+        - year: '2005'
+          title: التوسع الإقليمي
+          description: افتتحنا فروعاً جديدة في المنطقة
+        - year: '2012'
+          title: جائزة التميز المعماري
+          description: حصلنا على جائزة التميز المعماري العربي
+        - year: '2024'
+          title: 150 مشروع منجز
+          description: وصلنا إلى إنجاز 150 مشروعاً ناجحاً
+      style: vertical
+  - discriminant: faq
+    value:
+      heading: الأسئلة الشائعة
+      questions:
+        - question: كم تستغرق عملية التصميم المعماري؟
+          answer: >-
+            تختلف المدة حسب حجم وتعقيد المشروع. عادةً من 4-8 أسابيع للمشاريع
+            الصغيرة.
+        - question: هل تقدمون خدمات الإشراف على التنفيذ؟
+          answer: نعم، نقدم خدمات الإشراف الهندسي الكامل على التنفيذ.
+        - question: ما هي التكلفة المتوقعة للتصميم المعماري؟
+          answer: تعتمد على عدة عوامل. نقدم عروض أسعار مجانية بعد دراسة متطلباتكم.
+      style: accordion
+  - discriminant: cta
+    value:
+      heading: هل لديك مشروع في ذهنك؟
+      description: نحن هنا لمساعدتك في تحويل أفكارك إلى واقع معماري متميز.
+      buttonText: تواصل معنا الآن
+      buttonLink: /contact
+      backgroundColor: accent

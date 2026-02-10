@@ -1,0 +1,148 @@
+---
+title: MDX field
+summary: WYSIWYG editor for MDX
+---
+
+The `mdx` field reads and writes content in MDX.
+
+## Example usage
+
+```tsx
+// Keystatic config
+import { fields } from '@keystatic/core'
+
+// Inside a collection...
+schema: {
+ richText: fields.mdx({
+  label: 'Rich text'
+ })
+}
+```
+
+Keystatic will store content and retrieve it for you using the [Reader API](/docs/reader-api), but you are responsible for rendering the MDX content. 
+
+You can use community tools or build your own.
+
+---
+
+## Use .md files instead of .mdx
+
+The `extension` lets you you to use `.md` files instead of `.mdx` for MDX collections or singletons:
+
+```diff
+content: fields.mdx({
+  label: 'Content',
++  extension: 'md',
+  // ...
+})
+```
+
+---
+
+## Content components
+
+The `mdx` field uses the new-generation and more capable [content components](/docs/content-components):
+
+```diff
+richText: fields.mdx({
+ label: 'Rich text',
++ components: {
++  // Add custom components here
++ } 
+})
+```
+Checkout the [content components](/docs/content-components) docs to learn how to create advanced editing experiences with the `mdx` field.
+
+---
+
+## MDX limitations in Keystatic
+
+### No import statements
+
+Keystatic statically analyzses the MDX content. This means you cannot have `import` statements inside the MDX file.
+
+This won't work:
+
+```mdx
+---
+title: My first post
+date: 2024-02-17
+---
+
+import { Card } from '../components/Card'
+
+# Hello, world!
+
+<Card title="This week's update" />
+```
+
+Remove the import from the MDX file. Instead, pass the components you want to import to the component responsible for rendering the MDX content:
+
+```tsx
+import { Card } from '../components/Card'
+
+<MdxRenderer components={{ Card }} />
+```
+
+### No HTML tags
+
+HTML tags in MDX are not supported by Keystatic. Replace them with their Markdown equivalent. 
+
+For example...
+
+```diff
+- Learn more on the <a href="https://keystatic.com">Keystatic website</a>.
++ Learn more on the [Keystatic website](https://keystatic.com).
+```
+
+...or 
+
+```diff
+- <blockquote>Wow, this is pretty cool!</blockquote>
++ > Wow, this is pretty cool!
+```
+
+---
+
+## Inline
+
+By default, `fields.mdx` will output content in a seperate file to the main data or below the main data if using `format.contentField`. If you want to have multiple pieces of content in the same file, you can use `fields.mdx.inline(...)` instead:
+
+```tsx
+someContent: fields.mdx.inline({
+ label: 'Some content',
+})
+```
+
+this will write content next to other fields like this instead of in a different file:
+
+```yaml
+someContent: |
+  # Title
+
+  Some content
+```
+
+---
+
+## Formatting options
+
+The editor can be customised to allow a range of formatting options. This is done via `options`.
+
+See the type signature for `MDXEditorOptions` for the full set of options:
+[https://docsmill.dev/npm/@keystatic/core@latest#/.fields.mdx.MDXEditorOptions](https://docsmill.dev/npm/@keystatic/core@latest#/.fields.mdx.MDXEditorOptions)
+
+---
+
+## Image options
+
+The directory where images are stored can be customised in the same way as [`fields.image`](/docs/fields/image) with `directory` and `publicPath`. Though unlike [`fields.image`](/docs/fields/image) outside the editor where image filenames are determined by the key in the schema where the field is, filenames for images in the editor can be customised directly in the editor.
+
+See the type signature for `MDXEditorOptions.image` for the full set of options:
+[https://docsmill.dev/npm/@keystatic/core@latest#/.fields.mdx.MDXEditorOptions](https://docsmill.dev/npm/@keystatic/core@latest#/.fields.mdx.MDXEditorOptions)
+
+---
+
+## Type signature
+
+Find the latest version of this field's type signature at: [https://docsmill.dev/npm/@keystatic/core#/.fields.mdx](https://docsmill.dev/npm/@keystatic/core#/.fields.mdx)

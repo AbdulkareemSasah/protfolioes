@@ -1,0 +1,213 @@
+---
+interface Question {
+    question: string;
+    answer: string;
+}
+
+interface Props {
+    heading?: string;
+    questions: Question[];
+    style?: "accordion" | "list";
+}
+
+const { heading, questions = [], style = "accordion" } = Astro.props;
+
+const faqId = `faq-${Math.random().toString(36).substr(2, 9)}`;
+---
+
+<section class="faq-section section">
+    <div class="container">
+        {
+            heading && (
+                <div class="section-header">
+                    <h2 class="section-title">{heading}</h2>
+                </div>
+            )
+        }
+
+        <div class="faq-container" id={faqId}>
+            {
+                questions.map((item, index) => (
+                    <div
+                        class={`faq-item ${style === "list" ? "open" : ""}`}
+                        style={`animation-delay: ${index * 0.1}s`}
+                    >
+                        {style === "accordion" ? (
+                            <button class="faq-question" aria-expanded="false">
+                                <span>{item.question}</span>
+                                <svg
+                                    class="faq-icon"
+                                    width="20"
+                                    height="20"
+                                    viewBox="0 0 24 24"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    stroke-width="2"
+                                >
+                                    <line x1="12" y1="5" x2="12" y2="19" />
+                                    <line x1="5" y1="12" x2="19" y2="12" />
+                                </svg>
+                            </button>
+                        ) : (
+                            <h3 class="faq-question-text">{item.question}</h3>
+                        )}
+                        <div class="faq-answer">
+                            <div class="faq-answer-content">
+                                <p>{item.answer}</p>
+                            </div>
+                        </div>
+                    </div>
+                ))
+            }
+        </div>
+    </div>
+</section>
+
+<style>
+    .faq-section {
+        background: var(--color-background);
+    }
+
+    .section-header {
+        text-align: center;
+        margin-bottom: 4rem;
+    }
+
+    .faq-container {
+        max-width: 800px;
+        margin: 0 auto;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .faq-item {
+        background: var(--color-surface);
+        border-radius: var(--radius-lg);
+        border: 1px solid rgba(255, 255, 255, 0.05);
+        overflow: hidden;
+        opacity: 0;
+        transform: translateY(20px);
+        animation: fadeInUp 0.5s ease forwards;
+        transition: border-color 0.3s ease;
+    }
+
+    .faq-item:hover,
+    .faq-item.open {
+        border-color: rgba(233, 69, 96, 0.3);
+    }
+
+    .faq-question {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1.5rem;
+        font-family: var(--font-heading);
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: var(--color-text);
+        background: transparent;
+        border: none;
+        cursor: pointer;
+        text-align: right;
+        transition: color 0.3s ease;
+    }
+
+    .faq-question:hover {
+        color: var(--color-accent);
+    }
+
+    .faq-question span {
+        flex: 1;
+    }
+
+    .faq-icon {
+        flex-shrink: 0;
+        transition: transform 0.3s ease;
+        color: var(--color-accent);
+    }
+
+    .faq-item.open .faq-icon {
+        transform: rotate(45deg);
+    }
+
+    .faq-question-text {
+        padding: 1.5rem;
+        font-size: 1.1rem;
+        color: var(--color-text);
+        margin: 0;
+    }
+
+    .faq-answer {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease;
+    }
+
+    .faq-item.open .faq-answer {
+        max-height: 500px;
+    }
+
+    .faq-answer-content {
+        padding: 0 1.5rem 1.5rem;
+    }
+
+    .faq-answer-content p {
+        margin: 0;
+        line-height: 1.8;
+        color: var(--color-text-muted);
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 768px) {
+        .faq-question {
+            padding: 1.25rem;
+            font-size: 1rem;
+        }
+
+        .faq-answer-content {
+            padding: 0 1.25rem 1.25rem;
+        }
+    }
+</style>
+
+<script define:vars={{ faqId }}>
+    const container = document.getElementById(faqId);
+
+    if (container) {
+        const items = container.querySelectorAll(".faq-item");
+
+        items.forEach((item) => {
+            const button = item.querySelector(".faq-question");
+
+            button?.addEventListener("click", () => {
+                const isOpen = item.classList.contains("open");
+
+                // Close all items
+                items.forEach((i) => {
+                    i.classList.remove("open");
+                    const btn = i.querySelector(".faq-question");
+                    btn?.setAttribute("aria-expanded", "false");
+                });
+
+                // Open clicked item if it was closed
+                if (!isOpen) {
+                    item.classList.add("open");
+                    button.setAttribute("aria-expanded", "true");
+                }
+            });
+        });
+    }
+</script>

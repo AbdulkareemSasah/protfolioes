@@ -1,0 +1,222 @@
+---
+// Service detail page
+import { getCollection, getEntry } from "astro:content";
+import Layout from "../../layouts/Layout.astro";
+import Header from "../../components/layout/Header.astro";
+import Footer from "../../components/layout/Footer.astro";
+import BlockRenderer from "../../components/BlockRenderer.astro";
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+    const services = await getCollection("services");
+
+    return services.map((service) => ({
+        params: { slug: service.id.replace(/\.[^/.]+$/, "") },
+        props: { service },
+    }));
+}
+
+const { service } = Astro.props;
+
+// Get settings
+const header = await getEntry("settings", "header");
+const footer = await getEntry("settings", "footer");
+const site = await getEntry("settings", "site");
+const labels = await getEntry("settings", "labels");
+
+const headerData = header?.data ?? {
+    navigation: [],
+    showCta: true,
+    ctaText: "تواصل معنا",
+    ctaLink: "/contact",
+    showThemeToggle: true,
+    logoPosition: "right",
+};
+
+const footerData = footer?.data ?? {
+    columns: [],
+    showSocial: true,
+    socialLinks: {},
+    copyrightText: "© {year} جميع الحقوق محفوظة",
+    showBackToTop: true,
+};
+
+const siteData = site?.data ?? {
+    siteName: "مكتب معماري",
+    logo: null,
+};
+
+const labelsData = labels?.data ?? {
+    backToServices: "العودة للخدمات",
+    contactUs: "تواصل معنا",
+};
+---
+
+<Layout
+    title={service.data.title}
+    description={service.data.description}
+    ogImage={service.data.featuredImage}
+>
+    <Header
+        slot="header"
+        siteName={siteData.siteName}
+        logo={siteData.logo}
+        logoPosition={headerData.logoPosition}
+        navigation={headerData.navigation}
+        showCta={headerData.showCta}
+        ctaText={headerData.ctaText}
+        ctaLink={headerData.ctaLink}
+        showThemeToggle={headerData.showThemeToggle}
+    />
+
+    <main class="service-page">
+        <!-- Hero Section -->
+        <section class="service-hero">
+            {
+                service.data.featuredImage && (
+                    <div class="hero-background">
+                        <img
+                            src={service.data.featuredImage}
+                            alt={service.data.title}
+                            class="hero-image"
+                        />
+                        <div class="hero-overlay" />
+                    </div>
+                )
+            }
+
+            <div class="container">
+                <div class="hero-content">
+                    <a href="/services" class="back-link">
+                        <svg
+                            width="20"
+                            height="20"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="2"
+                        >
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                        {labelsData.backToServices}
+                    </a>
+                    <h1 class="service-title">{service.data.title}</h1>
+                    {
+                        service.data.description && (
+                            <p class="service-description">
+                                {service.data.description}
+                            </p>
+                        )
+                    }
+                    <a href="/contact" class="btn btn-primary"
+                        >{labelsData.contactUs}</a
+                    >
+                </div>
+            </div>
+        </section>
+
+        <!-- Service Content -->
+        <section class="service-content section">
+            <div class="container">
+                {
+                    service.data.blocks && service.data.blocks.length > 0 && (
+                        <BlockRenderer
+                            blocks={service.data.blocks}
+                            labels={labelsData}
+                        />
+                    )
+                }
+            </div>
+        </section>
+    </main>
+
+    <Footer
+        slot="footer"
+        siteName={siteData.siteName}
+        logo={siteData.logo}
+        columns={footerData.columns}
+        showSocial={footerData.showSocial}
+        socialLinks={footerData.socialLinks}
+        copyrightText={footerData.copyrightText}
+        showBackToTop={footerData.showBackToTop}
+    />
+</Layout>
+
+<style>
+    .service-page {
+        padding-top: 0;
+    }
+
+    .service-hero {
+        position: relative;
+        min-height: 50vh;
+        display: flex;
+        align-items: center;
+        padding: 6rem 0 4rem;
+    }
+
+    .hero-background {
+        position: absolute;
+        inset: 0;
+    }
+
+    .hero-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .hero-overlay {
+        position: absolute;
+        inset: 0;
+        background: linear-gradient(
+            to right,
+            rgba(15, 15, 26, 0.95) 0%,
+            rgba(15, 15, 26, 0.7) 50%,
+            rgba(15, 15, 26, 0.4) 100%
+        );
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+        max-width: 600px;
+    }
+
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: var(--color-text-muted);
+        text-decoration: none;
+        margin-bottom: 1.5rem;
+        transition: color 0.3s ease;
+    }
+
+    .back-link:hover {
+        color: var(--color-accent);
+    }
+
+    .service-title {
+        font-size: clamp(2rem, 5vw, 3rem);
+        margin-bottom: 1rem;
+    }
+
+    .service-description {
+        font-size: 1.15rem;
+        line-height: 1.7;
+        margin-bottom: 2rem;
+    }
+
+    .service-content {
+        background: var(--color-background);
+    }
+
+    @media (max-width: 768px) {
+        .service-hero {
+            min-height: 40vh;
+        }
+    }
+</style>

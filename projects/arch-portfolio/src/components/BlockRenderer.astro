@@ -1,0 +1,87 @@
+---
+// Block Renderer - Renders page builder blocks dynamically
+import HeroBlock from "./blocks/HeroBlock.astro";
+import StatsBlock from "./blocks/StatsBlock.astro";
+import ProjectsGridBlock from "./blocks/ProjectsGridBlock.astro";
+import ServicesBlock from "./blocks/ServicesBlock.astro";
+import MediaBlock from "./blocks/MediaBlock.astro";
+import ContactBlock from "./blocks/ContactBlock.astro";
+import TextBlock from "./blocks/TextBlock.astro";
+import TestimonialsBlock from "./blocks/TestimonialsBlock.astro";
+import TeamBlock from "./blocks/TeamBlock.astro";
+import TimelineBlock from "./blocks/TimelineBlock.astro";
+import FaqBlock from "./blocks/FaqBlock.astro";
+import GalleryBlock from "./blocks/GalleryBlock.astro";
+import CtaBlock from "./blocks/CtaBlock.astro";
+import FeaturesBlock from "./blocks/FeaturesBlock.astro";
+import LogosBlock from "./blocks/LogosBlock.astro";
+import SpacerBlock from "./blocks/SpacerBlock.astro";
+
+interface Props {
+    blocks: any[];
+    labels?: Record<string, string>;
+}
+
+const { blocks = [], labels = {} } = Astro.props;
+
+// Block component mapping
+const blockComponents: Record<string, any> = {
+    hero: HeroBlock,
+    stats: StatsBlock,
+    projectsGrid: ProjectsGridBlock,
+    services: ServicesBlock,
+    media: MediaBlock,
+    contact: ContactBlock,
+    text: TextBlock,
+    testimonials: TestimonialsBlock,
+    team: TeamBlock,
+    timeline: TimelineBlock,
+    faq: FaqBlock,
+    gallery: GalleryBlock,
+    cta: CtaBlock,
+    features: FeaturesBlock,
+    logos: LogosBlock,
+    spacer: SpacerBlock,
+};
+---
+
+<div class="page-blocks">
+    {
+        blocks.map((block) => {
+            const BlockComponent = blockComponents[block.discriminant];
+
+            if (!BlockComponent) {
+                return (
+                    <div class="block-error">
+                        <p>Block type "{block.discriminant}" not found</p>
+                    </div>
+                );
+            }
+
+            // Merge labels into block props for components that need them
+            const blockProps = {
+                ...block.value,
+                labels,
+            };
+
+            return <BlockComponent {...blockProps} />;
+        })
+    }
+</div>
+
+<style>
+    .page-blocks {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .block-error {
+        padding: 2rem;
+        margin: 1rem;
+        background: rgba(239, 68, 68, 0.1);
+        border: 1px solid rgba(239, 68, 68, 0.3);
+        border-radius: var(--radius-lg);
+        text-align: center;
+        color: #ef4444;
+    }
+</style>

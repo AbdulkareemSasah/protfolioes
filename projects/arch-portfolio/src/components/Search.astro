@@ -1,0 +1,61 @@
+<div id="search" class="search-container"></div>
+<link href="/pagefind/pagefind-ui.css" rel="stylesheet" />
+<script src="/pagefind/pagefind-ui.js" is:inline></script>
+
+<script is:inline>
+    window.addEventListener('DOMContentLoaded', (event) => {
+        new PagefindUI({ 
+            element: "#search", 
+            showSubResults: true,
+            translations: {
+                placeholder: "ابحث في الموقع...",
+                clear_search: "مسح",
+                load_more: "تحميل المزيد",
+                search_label: "بحث",
+                filters_label: "تصفية",
+                zero_results: "لم يتم العثور على نتائج لـ [SEARCH_TERM]",
+                many_results: "تم العثور على [COUNT] نتيجة لـ [SEARCH_TERM]",
+                one_result: "نتيجة واحدة لـ [SEARCH_TERM]",
+                alt_search: "لم نعثر على نتائج لـ [SEARCH_TERM]. عرض نتائج لـ [DIFFERENT_TERM] بدلاً من ذلك",
+                search_suggestion: "لم نعثر على نتائج لـ [SEARCH_TERM]. هل تقصد [DIFFERENT_TERM]؟",
+                searching: "جاري البحث عن [SEARCH_TERM]..."
+            }
+        });
+    });
+</script>
+
+<style>
+    .search-container {
+        width: 100%;
+        max-width: 600px;
+        margin: 0 auto;
+        direction: ltr; /* Pagefind UI style fix */
+    }
+    
+    /* Customizing Pagefind to match theme */
+    :global(.pagefind-ui__search-input) {
+        background-color: var(--color-surface) !important;
+        color: var(--color-text) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        border-radius: var(--radius-base) !important;
+    }
+
+    :global(.pagefind-ui__result) {
+        border-color: rgba(255, 255, 255, 0.1) !important;
+    }
+
+    :global(.pagefind-ui__result-title),
+    :global(.pagefind-ui__result-link) {
+        color: var(--color-accent) !important;
+        text-decoration: none !important;
+    }
+
+    :global(.pagefind-ui__result-excerpt) {
+        color: var(--color-text-muted) !important;
+    }
+    
+    :global(.pagefind-ui__drawer) {
+        direction: rtl; 
+        text-align: right;
+    }
+</style>
