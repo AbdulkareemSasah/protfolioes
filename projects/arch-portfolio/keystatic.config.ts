@@ -500,6 +500,7 @@ export default config({
     storage: {
         kind: 'github',
         repo: 'AbdulkareemSasah/protfolioes',
+        pathPrefix: 'projects/arch-portfolio',
         credentials: {
             kind: 'custom',
         }
