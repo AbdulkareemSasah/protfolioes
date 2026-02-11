@@ -496,7 +496,6 @@ const linkSchema = fields.conditional(
 // ============================================
 
 export default config({
-  
     locale: "ar-AE",
     storage: {
         kind: 'github',
