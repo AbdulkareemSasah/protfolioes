@@ -496,16 +496,16 @@ const linkSchema = fields.conditional(
 // ============================================
 
 export default config({
+  
     locale: "ar-AE",
     storage: {
         kind: 'github',
-        repo: 'AbdulkareemSasah/protfolio',
+        repo: 'AbdulkareemSasah/protfolioes',
         credentials: {
             kind: 'custom',
         }
     },
     ui: {
-
         brand: { name: 'مدير المحتوى' },
     },
     singletons: {

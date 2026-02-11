@@ -7,8 +7,8 @@ const appSlug = {
   value: import.meta.env.PUBLIC_KEYSTATIC_GITHUB_APP_SLUG,
 };
 
-export function makePage(config: Config<any, any>) {
+export function makePage(config: Config<any, any>, basePath?: string) {
   return function Keystatic() {
-    return <GenericKeystatic config={config} appSlug={appSlug} />;
+    return <GenericKeystatic config={config} appSlug={appSlug} basePath={basePath} />;
   };
 }

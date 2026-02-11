@@ -26,8 +26,5 @@ export default defineConfig({
       }
     }
   },
-  integrations: [react(), keystatic(), sitemap(), tailwind()],
-  redirects: {
-    '/dashboard': '/keystatic'
-  }
+  integrations: [react(), keystatic({ uiPath: '/dashboard' }), sitemap(), tailwind()],
 });

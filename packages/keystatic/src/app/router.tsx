@@ -21,12 +21,13 @@ const RouterContext = createContext<Router | null>(null);
 
 export function RouterProvider(props: { children: ReactNode; basePath?: string }) {
   const [url, setUrl] = useState(() => window.location.href);
+  const basePath = props.basePath || '/dashboard';
 
   function navigate(url: string, replace: boolean) {
     const newUrl = new URL(url, window.location.href);
     if (
       newUrl.origin !== window.location.origin ||
-      !newUrl.pathname.startsWith(router.basePath)
+      !newUrl.pathname.startsWith(basePath)
     ) {
       window.location.assign(newUrl);
       return;
@@ -43,7 +44,7 @@ export function RouterProvider(props: { children: ReactNode; basePath?: string }
     navigate(path, false);
   }
   const parsedUrl = new URL(url);
-  const replaced = parsedUrl.pathname.replace(new RegExp(`^${router.basePath}/?`), '');
+  const replaced = parsedUrl.pathname.replace(new RegExp(`^${basePath}/?`), '');
   const params =
     replaced === '' ? [] : replaced.split('/').map(decodeURIComponent);
   const router = {
@@ -53,7 +54,7 @@ export function RouterProvider(props: { children: ReactNode; basePath?: string }
     replace,
     push,
     params,
-    basePath: props.basePath || '/keystatic',
+    basePath,
   };
   useEffect(() => {
     const handleNavigate = () => {

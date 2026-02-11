@@ -28,7 +28,7 @@ if (Astro.request.method === "POST") {
                 secure: import.meta.env.PROD,
                 maxAge: 60 * 60 * 24 * 7, // 7 days
             });
-            return Astro.redirect("/keystatic");
+            return Astro.redirect("/dashboard");
         } else {
             error = "البريد الإلكتروني أو كلمة المرور غير صحيحة";
         }

@@ -1,7 +1,13 @@
 import type { AstroIntegration } from 'astro';
 import { mkdirSync, writeFileSync } from 'node:fs';
 
-export default function keystatic(): AstroIntegration {
+export default function keystatic(
+  options?: { uiPath?: string }
+): AstroIntegration {
+  const uiPath = options?.uiPath || '/dashboard';
+  // Ensure uiPath starts with / and has no trailing slash
+  const normalizedUiPath = '/' + uiPath.replace(/^\/+|\/+$/g, '');
+
   return {
     name: 'keystatic',
     hooks: {
@@ -15,6 +21,15 @@ export default function keystatic(): AstroIntegration {
                 resolveId(id) {
                   if (id === 'virtual:keystatic-config') {
                     return this.resolve('./keystatic.config', './a');
+                  }
+                  if (id === 'virtual:keystatic-basepath') {
+                    return '\0virtual:keystatic-basepath';
+                  }
+                  return null;
+                },
+                load(id) {
+                  if (id === '\0virtual:keystatic-basepath') {
+                    return `export default ${JSON.stringify(normalizedUiPath)};`;
                   }
                   return null;
                 },
@@ -40,14 +55,14 @@ import "@keystatic/core/ui";
           // @ts-ignore
           entryPoint: '@keystatic/astro/internal/keystatic-astro-page.astro',
           entrypoint: '@keystatic/astro/internal/keystatic-astro-page.astro',
-          pattern: '/keystatic/[...params]',
+          pattern: `${normalizedUiPath}/[...params]`,
           prerender: false,
         });
         injectRoute({
           // @ts-ignore
           entryPoint: '@keystatic/astro/internal/keystatic-api.js',
           entrypoint: '@keystatic/astro/internal/keystatic-api.js',
-          pattern: '/api/keystatic/[...params]',
+          pattern: '/api/dashboard/[...params]',
           prerender: false,
         });
       },
