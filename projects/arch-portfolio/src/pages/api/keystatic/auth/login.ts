@@ -6,9 +6,9 @@ export const POST: APIRoute = async ({ request, cookies }) => {
   const username = body.username;
   const password = body.password;
 
-  const validUsername = import.meta.env.KEYSTATIC_USERNAME;
-  const validPassword = import.meta.env.KEYSTATIC_PASSWORD;
-  const githubToken = import.meta.env.KEYSTATIC_GITHUB_TOKEN;
+  const validUsername = import.meta.env.KEYSTATIC_USERNAME || process.env.KEYSTATIC_USERNAME;
+  const validPassword = import.meta.env.KEYSTATIC_PASSWORD || process.env.KEYSTATIC_PASSWORD;
+  const githubToken = import.meta.env.KEYSTATIC_GITHUB_TOKEN || process.env.KEYSTATIC_GITHUB_TOKEN;
 
   console.log('Login Attempt:', {
     receivedUsername: username,

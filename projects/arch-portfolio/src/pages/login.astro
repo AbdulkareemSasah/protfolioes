@@ -14,12 +14,21 @@ if (Astro.request.method === 'POST') {
     const email = data.get('email');
     const password = data.get('password');
 
-    // Get credentials from environment variables
-    const validEmail = import.meta.env.AUTH_EMAIL;
-    const validPassword = import.meta.env.AUTH_PASSWORD;
+    // Get credentials from environment variables (using KEYSTATIC_ prefix to match API)
+    const validEmail =
+      import.meta.env.KEYSTATIC_USERNAME || process.env.KEYSTATIC_USERNAME;
+    const validPassword =
+      import.meta.env.KEYSTATIC_PASSWORD || process.env.KEYSTATIC_PASSWORD;
+
+    console.log('Debug: Loaded Env Vars', {
+      hasEmail: !!validEmail,
+      hasPassword: !!validPassword,
+      emailLength: validEmail ? validEmail.length : 0,
+    });
 
     if (!validEmail || !validPassword) {
-      error = 'Server configuration error: Missing AUTH credentials.';
+      error =
+        'خطأ في إعدادات الخادم: بيانات الاعتماد (KEYSTATIC_USERNAME/PASSWORD) مفقودة.';
     } else if (email === validEmail && password === validPassword) {
       // Set auth token for middleware
       Astro.cookies.set('auth_token', 'true', {
@@ -30,7 +39,9 @@ if (Astro.request.method === 'POST') {
       });
 
       // Set GitHub token for Keystatic
-      const githubToken = import.meta.env.KEYSTATIC_GITHUB_TOKEN;
+      const githubToken =
+        import.meta.env.KEYSTATIC_GITHUB_TOKEN ||
+        process.env.KEYSTATIC_GITHUB_TOKEN;
       if (githubToken) {
         Astro.cookies.set('keystatic-gh-access-token', githubToken, {
           path: '/',
@@ -40,13 +51,18 @@ if (Astro.request.method === 'POST') {
         });
       } else {
         console.warn('KEYSTATIC_GITHUB_TOKEN is missing in env variables');
+        error = 'تحذير: رمز GitHub مفقود في الإعدادات';
       }
-      return Astro.redirect('/dashboard');
+
+      if (!error) {
+        return Astro.redirect('/dashboard');
+      }
     } else {
       error = 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
     }
   } catch (e) {
     error = 'حدث خطأ غير متوقع';
+    console.error(e);
   }
 }
 ---
